@@ -1,0 +1,12 @@
+apiVersion : v1
+kind: Pod
+metadata:
+  name: mydocker-image
+  labels:
+    name: mydocker-image
+spec:
+  containers:
+  - name: conteiner-httpd
+    image: httpd:latest
+    ports:
+      - containerPort: 80 

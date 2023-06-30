@@ -1,0 +1,21 @@
+apiVersion: apps/v1
+kind: Deployment
+metadata:
+  name: my-web-deployment
+  labels:
+    app:  my-web-application
+
+spec:
+  selector:
+    matchLabels:
+      project: kig
+  template:
+    metadata:
+      labels:
+        project: kig
+    spec:
+      containers: 
+        - name : illia-web
+          image: korniienkoi/test_k8s_php:v.1.0.5
+          ports:
+          - containerPort: 80
