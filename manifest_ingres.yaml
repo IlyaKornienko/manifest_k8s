@@ -49,86 +49,86 @@ spec:
         ports:
         - containerPort: 80
 
----
-apiVersion: autoscaling/v2
-kind: HorizontalPodAutoscaler
-metadata:
-  name: my-autoscaling
-spec:
-  scaleTargetRef:
-    apiVersion: apps/v1
-    kind: Deployment
-    name: deploy-app-ingress
-  minReplicas: 2
-  maxReplicas: 4
-  metrics:
-  - type: Resource
-    resource:
-      name: cpu
-      target:
-        type: Utilization
-        averageUtilization: 70
-  - type: Resource
-    resource:
-      name: memory
-      target:
-        type: Utilization
-        averageUtilization: 80
+# ---
+# apiVersion: autoscaling/v2
+# kind: HorizontalPodAutoscaler
+# metadata:
+#   name: my-autoscaling
+# spec:
+#   scaleTargetRef:
+#     apiVersion: apps/v1
+#     kind: Deployment
+#     name: deploy-app-ingress
+#   minReplicas: 2
+#   maxReplicas: 4
+#   metrics:
+#   - type: Resource
+#     resource:
+#       name: cpu
+#       target:
+#         type: Utilization
+#         averageUtilization: 70
+#   - type: Resource
+#     resource:
+#       name: memory
+#       target:
+#         type: Utilization
+#         averageUtilization: 80
 
----
-apiVersion: v1
-kind: Service
-metadata:
-  name: my-autoscaling-pod-service
-  labels:
-    env: prod
-    owner: IlliaKorniienko
-spec:
-  selector:
-    project: php-web-app
-  ports:
-    - name: app-listener
-      protocol: TCP
-      port: 80 
-      targetPort: 80
+# ---
+# apiVersion: v1
+# kind: Service
+# metadata:
+#   name: my-autoscaling-pod-service
+#   labels:
+#     env: prod
+#     owner: IlliaKorniienko
+# spec:
+#   selector:
+#     project: php-web-app
+#   ports:
+#     - name: app-listener
+#       protocol: TCP
+#       port: 80 
+#       targetPort: 80
 
----
-apiVersion: networking.k8s.io/v1
-kind: Ingress
-metadata:
-  name: myingress
+# ---
+# apiVersion: networking.k8s.io/v1
+# kind: Ingress
+# metadata:
+#   name: myingress
 
-spec:
-  rules:
-  - host: web.dd-test.pp.ua
-    http:
-      paths:
-        - pathType: Prefix
-          path: "/"
-          backend:
-            service: 
-              name: web
-              port:
-                number: 80
+# spec:
+#   rules:
+#   - host: web.dd-test.pp.ua
+#     http:
+#       paths:
+#         - pathType: Prefix
+#           path: "/"
+#           backend:
+#             service: 
+#               name: web
+#               port:
+#                 number: 80
 
-  - host: alias.dd-test.pp.ua
-    http:
-      paths:
-        - pathType: Prefix
-          path: "/"
-          backend:
-            service: 
-              name: alias
-              port:
-                number: 80
+#   - host: alias.dd-test.pp.ua
+#     http:
+#       paths:
+#         - pathType: Prefix
+#           path: "/"
+#           backend:
+#             service: 
+#               name: alias
+#               port:
+#                 number: 80
         
-  - host: yellow.dd-test.pp.ua
-    http:
-      paths:
-        - pathType: Prefix
-          path: "/"
-          backend:
-            service: 
-              name: yellow
-              port:
-                number: 80
+#   - host: yellow.dd-test.pp.ua
+#     http:
+#       paths:
+#         - pathType: Prefix
+#           path: "/"
+#           backend:
+#             service: 
+#               name: yellow
+#               port:
+#                 number: 80
