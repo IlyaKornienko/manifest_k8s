@@ -1,0 +1,42 @@
+apiVersion: networking.k8s.io/v1
+kind: Ingress
+metadata:
+  name: myingress
+
+spec:
+  rules:
+  - host: web.dd-test.pp.ua
+    http:
+      paths:
+        - pathType: Prefix
+          path: "/"
+          backend:
+            service: 
+              name: web
+              port:
+                number: 80
+
+  - host: alias.dd-test.pp.ua
+    http:
+      paths:
+        - pathType: Prefix
+          path: "/"
+          backend:
+            service: 
+              name: alias
+              port:
+                number: 80
+        
+  - host: yellow.dd-test.pp.ua
+    http:
+      paths:
+        - pathType: Prefix
+          path: "/"
+          backend:
+            service: 
+              name: yellow
+              port:
+                number: 80
+
+
+
