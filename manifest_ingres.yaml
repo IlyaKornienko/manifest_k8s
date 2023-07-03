@@ -1,7 +1,7 @@
 apiVersion: apps/v1
 kind: Deployment
 metadata:
-  name: web-app
+  name: deploy-app-ingress
 
 spec:
   selector:
@@ -13,7 +13,7 @@ spec:
         app: php-web-app
     spec:
       containers:
-      - name: container-1
+      - name: web
         image: korniienkoi/test_k8s_php:v.1.0.6
         resources:
           requests:
@@ -25,7 +25,7 @@ spec:
         ports:
         - containerPort: 80
 
-      - name: container-2
+      - name: alias
         image: korniienkoi/test_k8s_php:v.1.0.7
         resources:
           requests:
@@ -37,17 +37,17 @@ spec:
         ports:
         - containerPort: 80
       
-      # - name: container-3
-      #   image: korniienkoi/test_k8s_php:v.1.0.8
-      #   resources:
-      #     requests:
-      #       memory: "64Mi"
-      #       cpu: "250m"
-      #     limits:
-      #       memory: "128Mi"
-      #       cpu: "500m"
-      #   ports:
-      #   - containerPort: 80
+      - name: yellow
+        image: korniienkoi/test_k8s_php:v.1.0.8
+        resources:
+          requests:
+            memory: "64Mi"
+            cpu: "250m"
+          limits:
+            memory: "128Mi"
+            cpu: "500m"
+        ports:
+        - containerPort: 80
 
 ---
 apiVersion: autoscaling/v2
@@ -58,7 +58,7 @@ spec:
   scaleTargetRef:
     apiVersion: apps/v1
     kind: Deployment
-    name: web-app
+    name: deploy-app-ingress
   minReplicas: 2
   maxReplicas: 4
   metrics:
@@ -91,8 +91,6 @@ spec:
       protocol: TCP
       port: 80 
       targetPort: 80
-  type: ClusterIP
-
 
 ---
 apiVersion: networking.k8s.io/v1
@@ -102,23 +100,35 @@ metadata:
 
 spec:
   rules:
-  - host: yellow.dd-test.pp.ua
+  - host: web.dd-test.pp.ua
     http:
       paths:
-        - backend:
-          serviceName: container-1
-          servicePort: 80
+        - pathType: Prefix
+          path: "/"
+          backend:
+            service: 
+              name: web
+              port:
+                number: 80
 
   - host: alias.dd-test.pp.ua
     http:
       paths:
-        - backend:
-          serviceName: container-2
-          servicePort: 80
+        - pathType: Prefix
+          path: "/"
+          backend:
+            service: 
+              name: alias
+              port:
+                number: 80
         
-#   - host: web.dd-test.pp.ua
-#     http:
-#       paths:
-#         - backend:
-#           serviceName: php-container-1.0.8
-#           servicePort: 80       
+  - host: yellow.dd-test.pp.ua
+    http:
+      paths:
+        - pathType: Prefix
+          path: "/"
+          backend:
+            service: 
+              name: yellow
+              port:
+                number: 80
