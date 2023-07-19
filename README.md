@@ -1,5 +1,4 @@
 # manifest_k8s
 
 Create learning manifest files.
-Check visualstudio code worke whiche github
-Check work
+Check Visual Studio code work which github.
